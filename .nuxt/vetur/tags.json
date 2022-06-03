@@ -1,8 +1,11 @@
 {
-  "NuxtLogo": {
-    "description": "Auto imported from components/NuxtLogo.vue"
+  "MPGCalculator": {
+    "description": "Auto imported from components/MPG-calculator.vue"
   },
-  "Tutorial": {
-    "description": "Auto imported from components/Tutorial.vue"
+  "Navigation": {
+    "description": "Auto imported from components/Navigation.vue"
+  },
+  "Temperature": {
+    "description": "Auto imported from components/Temperature.vue"
   }
 }
