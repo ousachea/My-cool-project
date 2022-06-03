@@ -8,4 +8,5 @@ You can directly use them in pages and other components without the need to impo
 
 - `<MPGCalculator>` | `<m-p-g-calculator>` (components/MPG-calculator.vue)
 - `<Navigation>` | `<navigation>` (components/Navigation.vue)
+- `<Password>` | `<password>` (components/Password.vue)
 - `<Temperature>` | `<temperature>` (components/Temperature.vue)

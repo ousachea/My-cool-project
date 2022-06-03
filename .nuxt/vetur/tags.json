@@ -5,6 +5,9 @@
   "Navigation": {
     "description": "Auto imported from components/Navigation.vue"
   },
+  "Password": {
+    "description": "Auto imported from components/Password.vue"
+  },
   "Temperature": {
     "description": "Auto imported from components/Temperature.vue"
   }
