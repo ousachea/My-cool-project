@@ -13,8 +13,8 @@
 export default {
   data() {
     return {
-      fahrenheit: "75",
-      celsius: "",
+      fahrenheit: 75,
+      celsius: 25,
     };
   },
   methods: {
@@ -28,11 +28,10 @@ export default {
 </script>
 <style scoped>
 .slider-wrapper {
-  height: 100vh;
+  height: 60vh;
   padding: 40px;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  background-color: aliceblue;
 }
 </style>
