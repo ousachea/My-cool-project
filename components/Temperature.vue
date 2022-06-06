@@ -1,5 +1,6 @@
 <template>
   <div class="slider-wrapper">
+    <input type="tel"></input>
     <h1>{{ fahrenheit }} °F</h1>
     <a-slider v-model="fahrenheit" :min="50" :max="90" />
     <br />
