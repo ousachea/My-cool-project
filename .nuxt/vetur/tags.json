@@ -1,4 +1,7 @@
 {
+  "F1": {
+    "description": "Auto imported from components/F1.vue"
+  },
   "MPGCalculator": {
     "description": "Auto imported from components/MPG-calculator.vue"
   },
