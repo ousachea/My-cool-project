@@ -1,7 +1,13 @@
 <template>
   <div class="container-mpg">
-            <a-input-number v-model="mpg"
- size="large" :min="1" :max="100000" />
+    <a-input
+      type="tel"
+      v-model="mpg"
+      size="large"
+      :min="1"
+      :max="100000"
+    ></a-input>
+
     <div class="mpg-total">
       <h1 class="great" v-if="mpgConvert() <= 6">Great</h1>
       <h1 class="good" v-else-if="mpgConvert() <= 8">Good</h1>

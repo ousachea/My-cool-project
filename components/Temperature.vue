@@ -1,12 +1,25 @@
 <template>
   <div class="slider-wrapper">
-    <input type="tel"></input>
-    <h1>{{ fahrenheit }} °F</h1>
-    <a-slider v-model="fahrenheit" :min="50" :max="90" />
-    <br />
-    <br />
-    <a-slider v-model="celsius" :min="1" :max="50" />
-    <h1>{{ toCelsius() }} °C</h1>
+    <div class="fahrenheit-style">
+      <h1 class="tem-header">{{ fahrenheit }} °F</h1>
+      <a-slider
+        v-model="fahrenheit"
+        :min="60"
+        :max="90"
+        vertical
+        :tooltip-visible="false"
+      />
+    </div>
+    <div class="celsius-style">
+      <a-slider
+        v-model="celsius"
+        :min="15"
+        :max="35"
+        vertical
+        :tooltip-visible="false"
+      />
+      <h1 class="tem-header">{{ toCelsius() }} °C</h1>
+    </div>
   </div>
 </template>
 
@@ -29,10 +42,19 @@ export default {
 </script>
 <style scoped>
 .slider-wrapper {
-  height: 60vh;
-  padding: 40px;
   display: flex;
-  flex-direction: column;
   justify-content: center;
+}
+.tem-header {
+  padding: 10px;
+}
+.fahrenheit-style,
+.celsius-style {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  height: 250px;
+  padding: 12px;
 }
 </style>
