@@ -20,16 +20,7 @@ export default {
       c: "1",
     };
   },
-  head: {
-    title: "Fahrenheit to Celsius",
-    meta: [
-      {
-        hid: "",
-        name: "",
-        content: "",
-      },
-    ],
-  },
+
   methods: {
     toCelsius: function () {
       return parseFloat(((this.f - 32) * 5) / 9).toFixed(0);

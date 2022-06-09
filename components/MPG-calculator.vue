@@ -25,16 +25,6 @@ export default {
       mpg: "25",
     };
   },
-  head: {
-    title: "MPG to L/100km",
-    meta: [
-      {
-        hid: "",
-        name: "",
-        content: "",
-      },
-    ],
-  },
   methods: {
     mpgConvert: function () {
       return parseFloat(235.215 / this.mpg).toFixed(1);
