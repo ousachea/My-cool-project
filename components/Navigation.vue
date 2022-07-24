@@ -6,8 +6,8 @@
     <a-tab-pane key="2" tab="MPG Calculator">
       <MPGCalculator />
     </a-tab-pane>
-    <a-tab-pane key="3" tab="F1">
-      <F1 />
+    <a-tab-pane key="3" tab="Gold">
+      <Gold />
     </a-tab-pane>
   </a-tabs>
 </template>

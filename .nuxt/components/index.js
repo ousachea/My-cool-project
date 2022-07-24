@@ -1,4 +1,4 @@
-export { default as F1 } from '../../components/F1.vue'
+export { default as Gold } from '../../components/Gold.vue'
 export { default as MPGCalculator } from '../../components/MPG-calculator.vue'
 export { default as Navigation } from '../../components/Navigation.vue'
 export { default as Password } from '../../components/Password.vue'
