@@ -1,5 +1,5 @@
 <template>
-  <a-tabs clas="a-tabs" centered>
+  <a-tabs clas="a-tabs">
     <a-tab-pane key="1" tab="Temperature">
       <Temperature />
     </a-tab-pane>
