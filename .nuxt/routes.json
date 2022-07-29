@@ -1,5 +1,26 @@
 [
   {
+    "name": "Gold",
+    "path": "/Gold",
+    "component": "/Users/ousa/Desktop/My-cool-project/pages/Gold.vue",
+    "chunkName": "pages/Gold",
+    "_name": "_215661ea"
+  },
+  {
+    "name": "MPG",
+    "path": "/MPG",
+    "component": "/Users/ousa/Desktop/My-cool-project/pages/MPG.vue",
+    "chunkName": "pages/MPG",
+    "_name": "_64b9c2ec"
+  },
+  {
+    "name": "Temperature",
+    "path": "/Temperature",
+    "component": "/Users/ousa/Desktop/My-cool-project/pages/Temperature.vue",
+    "chunkName": "pages/Temperature",
+    "_name": "_7b682a4c"
+  },
+  {
     "name": "index",
     "path": "/",
     "component": "/Users/ousa/Desktop/My-cool-project/pages/index.vue",

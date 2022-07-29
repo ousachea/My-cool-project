@@ -5,16 +5,7 @@
       <a-slider
         v-model="fahrenheit"
         :min="60"
-        :max="90"
-        vertical
-        :tooltip-visible="false"
-      />
-    </div>
-    <div class="celsius-style">
-      <a-slider
-        v-model="celsius"
-        :min="15"
-        :max="35"
+        :max="99"
         vertical
         :tooltip-visible="false"
       />
