@@ -1,7 +1,9 @@
 <template>
   <div>
     <Navigation />
-    <Gold />
+    <div class="container">
+      <Gold />
+    </div>
   </div>
 </template>
 
