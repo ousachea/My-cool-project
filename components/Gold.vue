@@ -3,9 +3,9 @@
     <h1>Live Gold Price</h1>
     <p class="request-count">Requests today: {{ requestCount }} / {{ maxRequestsPerDay }}</p>
 
-    <div class="price">💰 Ounce: <span>{{ goldPrice.ounce || "Loading..." }}</span></div>
-    <div class="price">🔶 Damlung: <span>{{ goldPrice.damlung || "Loading..." }}</span></div>
-    <div class="price">🟡 Chi: <span>{{ goldPrice.chi || "Loading..." }}</span></div>
+    <div class="price">💰 Ounce អោន : <span>{{ goldPrice.ounce || "Loading..." }}</span></div>
+    <div class="price">🔶 Damlung តម្លឹង: <span>{{ goldPrice.damlung || "Loading..." }}</span></div>
+    <div class="price">🟡 Chi ជី: <span>{{ goldPrice.chi || "Loading..." }}</span></div>
 
     <h2>Check Price for Custom Chi (ជី)</h2>
     <input 
@@ -16,7 +16,7 @@
       min="0.01" 
       inputmode="decimal"
     />
-    <div class="price">💲 Price for <span>{{ customChiAmount }}</span> Chi: <span>{{ customChiPrice || "--" }}</span></div>
+    <div class="price">💲 តម្លៃសម្រាប់ <span>{{ customChiAmount }}</span> ជី: <span>{{ customChiPrice || "--" }}</span></div>
 
     <div class="timestamp">Last updated: {{ lastUpdated }}</div>
   </div>
