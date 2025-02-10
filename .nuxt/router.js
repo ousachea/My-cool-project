@@ -4,10 +4,10 @@ import { normalizeURL, decode } from 'ufo'
 import { interopDefault } from './utils'
 import scrollBehavior from './router.scrollBehavior.js'
 
-const _215661ea = () => interopDefault(import('../pages/Gold.vue' /* webpackChunkName: "pages/Gold" */))
-const _64b9c2ec = () => interopDefault(import('../pages/MPG.vue' /* webpackChunkName: "pages/MPG" */))
-const _7b682a4c = () => interopDefault(import('../pages/Temperature.vue' /* webpackChunkName: "pages/Temperature" */))
-const _9dbefc50 = () => interopDefault(import('../pages/index.vue' /* webpackChunkName: "pages/index" */))
+const _79a28109 = () => interopDefault(import('../pages/Gold.vue' /* webpackChunkName: "pages/Gold" */))
+const _3bd71f8b = () => interopDefault(import('../pages/MPG.vue' /* webpackChunkName: "pages/MPG" */))
+const _d5994a4a = () => interopDefault(import('../pages/Temperature.vue' /* webpackChunkName: "pages/Temperature" */))
+const _62584699 = () => interopDefault(import('../pages/index.vue' /* webpackChunkName: "pages/index" */))
 
 const emptyFn = () => {}
 
@@ -22,19 +22,19 @@ export const routerOptions = {
 
   routes: [{
     path: "/Gold",
-    component: _215661ea,
+    component: _79a28109,
     name: "Gold"
   }, {
     path: "/MPG",
-    component: _64b9c2ec,
+    component: _3bd71f8b,
     name: "MPG"
   }, {
     path: "/Temperature",
-    component: _7b682a4c,
+    component: _d5994a4a,
     name: "Temperature"
   }, {
     path: "/",
-    component: _9dbefc50,
+    component: _62584699,
     name: "index"
   }],
 

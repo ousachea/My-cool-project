@@ -2,25 +2,29 @@
   {
     "name": "Gold",
     "path": "/Gold",
-    "component": "/Users/ousa/Desktop/My-cool-project/pages/Gold.vue",
-    "chunkName": "pages/Gold"
+    "component": "/Users/ousachea/Desktop/My-cool-project/pages/Gold.vue",
+    "chunkName": "pages/Gold",
+    "_name": "_79a28109"
   },
   {
     "name": "MPG",
     "path": "/MPG",
-    "component": "/Users/ousa/Desktop/My-cool-project/pages/MPG.vue",
-    "chunkName": "pages/MPG"
+    "component": "/Users/ousachea/Desktop/My-cool-project/pages/MPG.vue",
+    "chunkName": "pages/MPG",
+    "_name": "_3bd71f8b"
   },
   {
     "name": "Temperature",
     "path": "/Temperature",
-    "component": "/Users/ousa/Desktop/My-cool-project/pages/Temperature.vue",
-    "chunkName": "pages/Temperature"
+    "component": "/Users/ousachea/Desktop/My-cool-project/pages/Temperature.vue",
+    "chunkName": "pages/Temperature",
+    "_name": "_d5994a4a"
   },
   {
     "name": "index",
     "path": "/",
-    "component": "/Users/ousa/Desktop/My-cool-project/pages/index.vue",
-    "chunkName": "pages/index"
+    "component": "/Users/ousachea/Desktop/My-cool-project/pages/index.vue",
+    "chunkName": "pages/index",
+    "_name": "_62584699"
   }
 ]
