@@ -14,7 +14,13 @@
     </div>
 
     <h2>Check Price for Custom Chi (ជី)</h2>
-    <input type="number" v-model="customChiAmount" placeholder="Enter Chi" min="1" />
+    <input 
+      type="number" 
+      v-model="customChiAmount" 
+      placeholder="Enter Chi" 
+      min="1" 
+      inputmode="numeric"
+    />
     <button @click="calculateChiPrice">Check Price</button>
     <div class="price">
       💲 Price for <span>{{ customChiAmount }}</span> Chi:
@@ -128,9 +134,9 @@ export default {
 }
 
 input {
-  padding: 10px;
-  font-size: 1em;
-  width: 150px;
+  padding: 12px;
+  font-size: 16px; /* Prevents zoom on iPhone */
+  width: 100%;
   border: 2px solid #ddd;
   border-radius: 5px;
   text-align: center;
@@ -145,5 +151,6 @@ button {
   border-radius: 5px;
   cursor: pointer;
   margin-top: 10px;
+  width: 100%;
 }
 </style>
