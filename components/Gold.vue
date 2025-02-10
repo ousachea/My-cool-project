@@ -3,29 +3,21 @@
     <h1>Live Gold Price</h1>
     <p class="request-count">Requests today: {{ requestCount }} / {{ maxRequestsPerDay }}</p>
 
-    <div class="price">
-      💰 Ounce: <span>{{ goldPrice.ounce || "Loading..." }}</span>
-    </div>
-    <div class="price">
-      🔶 Damlung: <span>{{ goldPrice.damlung || "Loading..." }}</span>
-    </div>
-    <div class="price">
-      🟡 Chi: <span>{{ goldPrice.chi || "Loading..." }}</span>
-    </div>
+    <div class="price">💰 Ounce: <span>{{ goldPrice.ounce || "Loading..." }}</span></div>
+    <div class="price">🔶 Damlung: <span>{{ goldPrice.damlung || "Loading..." }}</span></div>
+    <div class="price">🟡 Chi: <span>{{ goldPrice.chi || "Loading..." }}</span></div>
 
     <h2>Check Price for Custom Chi (ជី)</h2>
     <input 
       type="number" 
-      v-model="customChiAmount" 
-      placeholder="Enter Chi" 
-      min="1" 
-      inputmode="numeric"
+      v-model.number="customChiAmount" 
+      placeholder="Enter Chi (e.g., 0.5, 1.2)" 
+      step="0.01" 
+      min="0.01" 
+      inputmode="decimal"
     />
     <button @click="calculateChiPrice">Check Price</button>
-    <div class="price">
-      💲 Price for <span>{{ customChiAmount }}</span> Chi:
-      <span>{{ customChiPrice || "--" }}</span>
-    </div>
+    <div class="price">💲 Price for <span>{{ customChiAmount }}</span> Chi: <span>{{ customChiPrice || "--" }}</span></div>
 
     <div class="timestamp">Last updated: {{ lastUpdated }}</div>
   </div>
@@ -36,27 +28,36 @@ export default {
   data() {
     return {
       goldPrice: {},
-      customChiAmount: 1,
+      customChiAmount: 1.0,
       customChiPrice: null,
       lastUpdated: null,
       pricePerChi: 0,
       requestCount: 0,
       maxRequestsPerDay: 100,
+      cacheDuration: 60 * 60 * 1000, // 1 hour
     };
   },
   created() {
-    this.loadRequestCount();
-    this.fetchGoldPrice();
+    this.loadRequestData();
+    this.checkAndFetchGoldPrice();
   },
   methods: {
-    loadRequestCount() {
+    loadRequestData() {
       const today = new Date().toDateString();
       const savedData = JSON.parse(localStorage.getItem("goldPriceRequests")) || {};
+      
       if (savedData.date === today) {
         this.requestCount = savedData.count;
       } else {
         this.requestCount = 0;
         localStorage.setItem("goldPriceRequests", JSON.stringify({ date: today, count: 0 }));
+      }
+
+      const cachedPrice = JSON.parse(localStorage.getItem("goldPriceData"));
+      if (cachedPrice && new Date() - new Date(cachedPrice.timestamp) < this.cacheDuration) {
+        this.goldPrice = cachedPrice.prices;
+        this.pricePerChi = cachedPrice.pricePerChi;
+        this.lastUpdated = cachedPrice.timestamp;
       }
     },
     updateRequestCount() {
@@ -64,12 +65,20 @@ export default {
       this.requestCount++;
       localStorage.setItem("goldPriceRequests", JSON.stringify({ date: today, count: this.requestCount }));
     },
-    async fetchGoldPrice() {
+    async checkAndFetchGoldPrice() {
       if (this.requestCount >= this.maxRequestsPerDay) {
         alert("Request limit reached for today. Try again tomorrow.");
         return;
       }
 
+      const cachedPrice = JSON.parse(localStorage.getItem("goldPriceData"));
+      if (cachedPrice && new Date() - new Date(cachedPrice.timestamp) < this.cacheDuration) {
+        return; // Use cached price if still valid
+      }
+
+      this.fetchGoldPrice();
+    },
+    async fetchGoldPrice() {
       try {
         const response = await fetch("https://www.goldapi.io/api/XAU/USD", {
           headers: { "x-access-token": "goldapi-vf9wd19m6tl90rg-io" },
@@ -89,6 +98,13 @@ export default {
 
         this.lastUpdated = new Date().toLocaleTimeString();
         this.updateRequestCount();
+
+        // Save fetched price in localStorage with timestamp
+        localStorage.setItem("goldPriceData", JSON.stringify({
+          prices: this.goldPrice,
+          pricePerChi: this.pricePerChi,
+          timestamp: new Date().toISOString()
+        }));
       } catch (error) {
         this.goldPrice = {
           ounce: "Error fetching price",
