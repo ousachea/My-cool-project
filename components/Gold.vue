@@ -1,87 +1,85 @@
 <template>
-  <div class="gold-wrapper">
-    <h1>Live Gold Price</h1>
-    <p class="request-count">Requests today: {{ requestCount }} / {{ maxRequestsPerDay }}</p>
+  <div>
+    <!-- Gold Price Chart -->
+    <div class="chart-container">
+      <canvas id="goldPriceChart"></canvas>
+    </div>
 
-    <div class="price">💰 Ounce អោន : <span>{{ goldPrice.ounce || "Loading..." }}</span></div>
-    <div class="price">🔶 Damlung តម្លឹង: <span>{{ goldPrice.damlung || "Loading..." }}</span></div>
-    <div class="price">🟡 Chi ជី: <span>{{ goldPrice.chi || "Loading..." }}</span></div>
+    <!-- Gold Price Details -->
+    <div>
+      <h1>Live Gold Price</h1>
+      <div class="price">
+        💰 Ounce: <span>{{ goldPrice.ounce || "Loading..." }}</span>
+      </div>
+      <div class="price">
+        🔶 មួយដំឡឹង (Damlung): <span>{{ goldPrice.damlung || "Loading..." }}</span>
+      </div>
+      <div class="price">
+        🟡 មួយជី (Chi): <span>{{ goldPrice.chi || "Loading..." }}</span>
+      </div>
 
-    <h2>Check Price for Custom Chi (ជី)</h2>
-    <input 
-      type="number" 
-      v-model.number="customChiAmount" 
-      placeholder="Enter Chi (e.g., 0.5, 1.2)" 
-      step="0.01" 
-      min="0.01" 
-      inputmode="decimal"
-    />
-    <div class="price">💲 តម្លៃសម្រាប់ <span>{{ customChiAmount }}</span> ជី: <span>{{ customChiPrice || "--" }}</span></div>
+      <h2>Check Price for Custom Chi (ជី)</h2>
+      <input
+        type="number"
+        v-model.number="customChiAmount"
+        placeholder="Enter Chi"
+        min="0"
+      />
+      <div class="price">
+        💲 តម្លៃ <span>{{ customChiAmount }}</span> ជី:
+        <span>{{ customChiPrice || "--" }}</span>
+      </div>
 
-    <div class="timestamp">Last updated: {{ lastUpdated }}</div>
+      <div class="timestamp">Last updated: {{ lastUpdated }}</div>
+    </div>
   </div>
 </template>
 
 <script>
+import Chart from "chart.js/auto";
+
 export default {
   data() {
     return {
       goldPrice: {},
-      customChiAmount: 1.0,
+      customChiAmount: 1,
+      customChiPrice: null,
       lastUpdated: null,
       pricePerChi: 0,
-      requestCount: 0,
-      maxRequestsPerDay: 100,
-      cacheDuration: 60 * 60 * 1000, // 1 hour
+      hourlyPriceKey: "hourlyGoldPrice",
+      priceHistory: [],
     };
   },
-  computed: {
-    customChiPrice() {
-      return this.pricePerChi && this.customChiAmount > 0
-        ? (this.pricePerChi * this.customChiAmount).toFixed(2)
-        : null;
-    }
-  },
   created() {
-    this.loadRequestData();
-    this.checkAndFetchGoldPrice();
+    this.loadGoldPrice();
+  },
+  mounted() {
+    this.initializeChart();
   },
   methods: {
-    loadRequestData() {
-      const today = new Date().toDateString();
-      const savedData = JSON.parse(localStorage.getItem("goldPriceRequests")) || {};
-      
-      if (savedData.date === today) {
-        this.requestCount = savedData.count;
+    loadGoldPrice() {
+      const savedData = JSON.parse(localStorage.getItem(this.hourlyPriceKey));
+      const now = new Date();
+
+      if (savedData && savedData.timestamp && new Date(savedData.timestamp).getTime() + 3600000 > now.getTime()) {
+        this.goldPrice = savedData.goldPrice;
+        this.lastUpdated = savedData.lastUpdated;
+        this.pricePerChi = savedData.pricePerChi;
+        this.priceHistory = savedData.priceHistory || [];
+        this.updateChart();
       } else {
-        this.requestCount = 0;
-        localStorage.setItem("goldPriceRequests", JSON.stringify({ date: today, count: 0 }));
-      }
-
-      const cachedPrice = JSON.parse(localStorage.getItem("goldPriceData"));
-      if (cachedPrice && new Date() - new Date(cachedPrice.timestamp) < this.cacheDuration) {
-        this.goldPrice = cachedPrice.prices;
-        this.pricePerChi = cachedPrice.pricePerChi;
-        this.lastUpdated = cachedPrice.timestamp;
+        this.fetchGoldPrice();
       }
     },
-    updateRequestCount() {
-      const today = new Date().toDateString();
-      this.requestCount++;
-      localStorage.setItem("goldPriceRequests", JSON.stringify({ date: today, count: this.requestCount }));
-    },
-    async checkAndFetchGoldPrice() {
-      if (this.requestCount >= this.maxRequestsPerDay) {
-        alert("Request limit reached for today. Try again tomorrow.");
-        return;
-      }
-
-      const cachedPrice = JSON.parse(localStorage.getItem("goldPriceData"));
-      if (cachedPrice && new Date() - new Date(cachedPrice.timestamp) < this.cacheDuration) {
-        return; // Use cached price if still valid
-      }
-
-      this.fetchGoldPrice();
+    saveGoldPriceToLocal() {
+      const savedData = {
+        goldPrice: this.goldPrice,
+        lastUpdated: this.lastUpdated,
+        pricePerChi: this.pricePerChi,
+        priceHistory: this.priceHistory,
+        timestamp: new Date().toISOString(),
+      };
+      localStorage.setItem(this.hourlyPriceKey, JSON.stringify(savedData));
     },
     async fetchGoldPrice() {
       try {
@@ -102,15 +100,20 @@ export default {
         };
 
         this.lastUpdated = new Date().toLocaleTimeString();
-        this.updateRequestCount();
 
-        // Save fetched price in localStorage with timestamp
-        localStorage.setItem("goldPriceData", JSON.stringify({
-          prices: this.goldPrice,
-          pricePerChi: this.pricePerChi,
-          timestamp: new Date().toISOString()
-        }));
+        // Update price history
+        this.priceHistory.push({
+          time: new Date().toLocaleTimeString(),
+          price: this.pricePerChi,
+        });
+        if (this.priceHistory.length > 24) {
+          this.priceHistory.shift(); // Keep only the last 24 entries
+        }
+
+        this.saveGoldPriceToLocal();
+        this.updateChart();
       } catch (error) {
+        console.error("Error fetching gold price", error);
         this.goldPrice = {
           ounce: "Error fetching price",
           damlung: "Error fetching price",
@@ -118,46 +121,52 @@ export default {
         };
       }
     },
+    calculateChiPrice() {
+      if (this.customChiAmount > 0) {
+        const totalPrice = this.pricePerChi * this.customChiAmount;
+        this.customChiPrice = totalPrice.toFixed(2);
+      } else {
+        this.customChiPrice = null;
+      }
+    },
+    initializeChart() {
+      const ctx = document.getElementById("goldPriceChart").getContext("2d");
+      this.chart = new Chart(ctx, {
+        type: "line",
+        data: {
+          labels: this.priceHistory.map((entry) => entry.time),
+          datasets: [
+            {
+              label: "Gold Price (Chi)",
+              data: this.priceHistory.map((entry) => entry.price),
+              borderColor: "#ffb300",
+              backgroundColor: "rgba(255, 179, 0, 0.2)",
+              borderWidth: 2,
+              tension: 0.3,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+        },
+      });
+    },
+    updateChart() {
+      if (this.chart) {
+        this.chart.data.labels = this.priceHistory.map((entry) => entry.time);
+        this.chart.data.datasets[0].data = this.priceHistory.map((entry) => entry.price);
+        this.chart.update();
+      }
+    },
   },
 };
 </script>
 
 <style>
-.request-count {
-  font-size: 1.2em;
-  color: #333;
-  margin-bottom: 15px;
-  font-weight: 600;
-}
-
-.gold-wrapper {
-  text-align: center;
-  max-width: 400px;
-  margin: auto;
-  padding: 20px;
-  background: white;
-  border-radius: 10px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-}
-
-.price {
-  font-size: 1.5em;
-  color: #ffb300;
-  margin: 10px 0;
-}
-
-input {
-  padding: 12px;
-  font-size: 16px; /* Prevents zoom on iPhone */
+.chart-container {
   width: 100%;
-  border: 2px solid #ddd;
-  border-radius: 5px;
-  text-align: center;
-}
-
-.timestamp {
-  margin-top: 10px;
-  font-size: 0.9em;
-  color: #777;
+  height: 300px;
+  margin-bottom: 20px;
 }
 </style>
