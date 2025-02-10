@@ -16,7 +16,6 @@
       min="0.01" 
       inputmode="decimal"
     />
-    <button @click="calculateChiPrice">Check Price</button>
     <div class="price">💲 Price for <span>{{ customChiAmount }}</span> Chi: <span>{{ customChiPrice || "--" }}</span></div>
 
     <div class="timestamp">Last updated: {{ lastUpdated }}</div>
@@ -29,13 +28,19 @@ export default {
     return {
       goldPrice: {},
       customChiAmount: 1.0,
-      customChiPrice: null,
       lastUpdated: null,
       pricePerChi: 0,
       requestCount: 0,
       maxRequestsPerDay: 100,
       cacheDuration: 60 * 60 * 1000, // 1 hour
     };
+  },
+  computed: {
+    customChiPrice() {
+      return this.pricePerChi && this.customChiAmount > 0
+        ? (this.pricePerChi * this.customChiAmount).toFixed(2)
+        : null;
+    }
   },
   created() {
     this.loadRequestData();
@@ -113,14 +118,6 @@ export default {
         };
       }
     },
-    calculateChiPrice() {
-      if (this.customChiAmount > 0) {
-        const totalPrice = this.pricePerChi * this.customChiAmount;
-        this.customChiPrice = totalPrice.toFixed(2);
-      } else {
-        this.customChiPrice = null;
-      }
-    },
   },
 };
 </script>
@@ -158,15 +155,9 @@ input {
   text-align: center;
 }
 
-button {
-  background-color: #ffb300;
-  border: none;
-  color: white;
-  padding: 10px 15px;
-  font-size: 1em;
-  border-radius: 5px;
-  cursor: pointer;
+.timestamp {
   margin-top: 10px;
-  width: 100%;
+  font-size: 0.9em;
+  color: #777;
 }
 </style>
