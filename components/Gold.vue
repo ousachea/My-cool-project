@@ -4,7 +4,8 @@
 
     <!-- Display the last stored price -->
     <div class="last-price fade-in">
-      <strong>Live Gold Price:</strong> <span>{{ lastRequestPrice || 'Loading...' }}</span>
+      <strong>Live Gold Price:</strong>
+      <span>{{ lastRequestPrice || 'Loading...' }}</span>
     </div>
 
     <!-- Stored Gold Price (Hidden) -->
@@ -38,7 +39,9 @@
       <span>{{ customChiPrice || '--' }}</span>
     </div>
 
-    <div class="timestamp fade-in slide-up">Last updated: {{ lastUpdated }}</div>
+    <div class="timestamp fade-in slide-up">
+      Last updated: {{ lastUpdated }}
+    </div>
   </div>
 </template>
 
@@ -130,7 +133,7 @@ export default {
 <style>
 /* General Styles */
 .gold-wrapper {
-  background-color: #fff;
+  background-color: #fff8e1; /* Light gold background */
   padding: 20px;
   border-radius: 12px;
   box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.1);
@@ -141,51 +144,57 @@ export default {
 }
 
 h1 {
-  color: #ffb300;
+  color: #ffd700; /* Gold color */
   font-size: 26px;
   margin-bottom: 20px;
   text-transform: uppercase;
+  text-align: center;
 }
 
 h2 {
   font-size: 22px;
-  color: #444;
+  color: #ffcc00; /* Bright gold */
   margin-top: 25px;
+  text-align: center;
 }
 
 .price {
   font-size: 18px;
-  margin: 12px 0;
-  color: #555;
+  margin: 10px 0;
+  color: #ffb300; /* Slight darker gold */
+  text-align: center;
 }
 
 input {
   width: 100%;
-  padding: 14px;
-  font-size: 18px;
-  border: 2px solid #ddd;
+  padding: 20px; /* Increase padding for a larger input field */
+  font-size: 24px; /* Increase font size */
+  border: 2px solid #ffd700; /* Gold border */
   border-radius: 6px;
   margin: 15px 0;
   transition: border-color 0.3s;
+  text-align: center; /* Center text in input */
 }
 
 input:focus {
-  border-color: #ffb300;
+  border-color: #ffcc00;
   outline: none;
 }
 
 .timestamp {
-  color: #777;
+  color: #b58b3b; /* Darker gold shade */
   margin-top: 15px;
   font-size: 14px;
+  text-align: center;
 }
 
 .price span {
   font-weight: bold;
-  color: #333;
+  color: #663d00; /* Deep brown-gold for emphasis */
 }
 
-.price, .timestamp {
+.price,
+.timestamp {
   font-family: 'Arial', sans-serif;
 }
 
@@ -241,7 +250,8 @@ input:focus {
 }
 
 @keyframes bounce {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0);
   }
   50% {
@@ -262,10 +272,10 @@ input:focus {
 
 @keyframes glow {
   0% {
-    text-shadow: 0 0 10px #ffb300, 0 0 20px #ffb300, 0 0 30px #ffb300;
+    text-shadow: 0 0 10px #ffd700, 0 0 20px #ffd700, 0 0 30px #ffd700;
   }
   100% {
-    text-shadow: 0 0 15px #ffb300, 0 0 25px #ffb300, 0 0 35px #ffb300;
+    text-shadow: 0 0 15px #ffcc00, 0 0 25px #ffcc00, 0 0 35px #ffcc00;
   }
 }
 
@@ -290,16 +300,16 @@ input:focus {
 /* Responsive Styles for Mobile */
 @media (max-width: 600px) {
   .gold-wrapper {
-    padding: 15px;
-    max-width: 100%;
+    padding: 20px;
+    max-width: 90%;
   }
 
   h1 {
-    font-size: 22px;
+    font-size: 24px;
   }
 
   h2 {
-    font-size: 18px;
+    font-size: 20px;
   }
 
   .price {
@@ -307,8 +317,8 @@ input:focus {
   }
 
   input {
-    font-size: 16px;
-    padding: 12px;
+    font-size: 22px; /* Larger font size */
+    padding: 18px; /* Bigger padding */
   }
 
   .timestamp {
@@ -318,7 +328,7 @@ input:focus {
 
 @media (max-width: 400px) {
   .gold-wrapper {
-    padding: 10px;
+    padding: 15px;
   }
 
   h1 {
@@ -326,7 +336,7 @@ input:focus {
   }
 
   h2 {
-    font-size: 16px;
+    font-size: 18px;
   }
 
   .price {
@@ -334,8 +344,8 @@ input:focus {
   }
 
   input {
-    font-size: 14px;
-    padding: 10px;
+    font-size: 20px; /* Larger font size */
+    padding: 16px; /* Larger padding */
   }
 
   .timestamp {
