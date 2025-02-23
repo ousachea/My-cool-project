@@ -1,46 +1,59 @@
 <template>
-  <div class="gold-wrapper">
-    <h1 class="fade-in">Live Gold Price</h1>
+  <div class="page-wrapper">
+    <div
+      :class="[
+        'gold-wrapper',
+        darkMode ? 'dark-mode' : 'light-mode',
+        'fade-transition',
+      ]"
+    >
+      <h1 class="gold-glow fade-in slide-down">Live Gold Price</h1>
 
-    <!-- Display the last stored price -->
-    <div class="last-price fade-in">
-      <strong>Live Gold Price:</strong>
-      <span>{{ lastRequestPrice || 'Loading...' }}</span>
-    </div>
+      <!-- Display the last stored price -->
+      <div class="last-price fade-in scale-up">
+        <strong>Live Gold Price:</strong>
+        <span class="gold-glow">{{ lastRequestPrice || 'Loading...' }}</span>
+      </div>
 
-    <!-- Stored Gold Price (Hidden) -->
-    <span id="stored-price" style="display: none">{{ lastStoredPrice }}</span>
+      <!-- Gold Price Details -->
+      <div class="price fade-in">
+        💰 Ounce: <span>{{ goldPrice.ounce || 'Loading...' }}</span>
+      </div>
+      <div class="price fade-in">
+        🔶 មួយដំឡឹង (Damlung):
+        <span>{{ goldPrice.damlung || 'Loading...' }}</span>
+      </div>
+      <div class="price fade-in">
+        🟡 មួយជី (Chi): <span>{{ goldPrice.chi || 'Loading...' }}</span>
+      </div>
 
-    <!-- Gold Price Details with Cool Animation -->
-    <div class="price fade-in pulse-animation bounce-animation">
-      💰 Ounce: <span>{{ goldPrice.ounce || 'Loading...' }}</span>
-    </div>
-    <div class="price fade-in pulse-animation bounce-animation">
-      🔶 មួយដំឡឹង (Damlung):
-      <span>{{ goldPrice.damlung || 'Loading...' }}</span>
-    </div>
-    <div class="price fade-in pulse-animation bounce-animation">
-      🟡 មួយជី (Chi): <span>{{ goldPrice.chi || 'Loading...' }}</span>
-    </div>
+      <!-- Custom Chi Price -->
+      <h2 class="slide-in">Check Price for Custom Chi (ជី)</h2>
+      <input
+        type="number"
+        step="0.01"
+        v-model.number="customChiAmount"
+        placeholder="Enter ជី"
+        min="0"
+        @input="calculateChiPrice"
+        :class="['big-input', darkMode ? 'dark-glow' : 'light-glow']"
+      />
+      <div class="price fade-in">
+        💲 តម្លៃ <span class="gold-glow">{{ customChiAmount }}</span> ជី:
+        <span class="gold-glow">{{ customChiPrice || '--' }}</span>
+      </div>
 
-    <!-- Custom Chi Price -->
-    <h2 class="slide-up glow-animation">Check Price for Custom Chi (ជី)</h2>
-    <input
-      type="number"
-      step="0.01"
-      v-model.number="customChiAmount"
-      placeholder="Enter Chi"
-      min="0"
-      @input="calculateChiPrice"
-      class="hover-animate shake-animation"
-    />
-    <div class="price fade-in">
-      💲 តម្លៃ <span>{{ customChiAmount }}</span> ជី:
-      <span>{{ customChiPrice || '--' }}</span>
-    </div>
+      <div class="timestamp fade-in slide-up">
+        Last updated: {{ lastUpdated }}
+      </div>
 
-    <div class="timestamp fade-in slide-up">
-      Last updated: {{ lastUpdated }}
+      <!-- Dark Mode Toggle Button -->
+      <button @click="toggleDarkMode" class="toggle-mode">
+        <transition name="fade">
+          <span v-if="darkMode">☀️ Light Mode</span>
+          <span v-else>🌙 Dark Mode</span>
+        </transition>
+      </button>
     </div>
   </div>
 </template>
@@ -57,12 +70,13 @@ export default {
       checkInterval: 30 * 60 * 1000, // 30 minutes
       lastStoredPrice: '',
       lastRequestPrice: '',
+      darkMode: false,
     };
   },
   mounted() {
-    this.lastStoredPrice = document
-      .getElementById('stored-price')
-      .innerText.trim();
+    this.darkMode = JSON.parse(localStorage.getItem('darkMode')) || false;
+    this.lastStoredPrice = localStorage.getItem('last_gold_price') || '';
+    this.lastRequestPrice = this.lastStoredPrice;
     this.checkGoldPrice();
   },
   methods: {
@@ -82,6 +96,7 @@ export default {
         if (newPrice && newPrice.ounce !== this.lastStoredPrice) {
           await this.fetchGoldPrice(true);
           localStorage.setItem('last_gold_update', now);
+          localStorage.setItem('last_gold_price', newPrice.ounce);
         }
       }
     },
@@ -103,13 +118,11 @@ export default {
           chi: `$${this.pricePerChi.toFixed(2)}`,
         };
 
-        // Update stored price and the price displayed
         if (updateUI) {
           this.goldPrice = newPrice;
           this.lastUpdated = new Date().toLocaleTimeString();
-          this.calculateChiPrice(); // Update custom chi price
-          document.getElementById('stored-price').innerText = newPrice.ounce;
-          this.lastRequestPrice = newPrice.ounce; // Store the last price
+          this.calculateChiPrice();
+          this.lastRequestPrice = newPrice.ounce;
         }
 
         return newPrice;
@@ -126,230 +139,107 @@ export default {
         this.customChiPrice = null;
       }
     },
+    toggleDarkMode() {
+      this.darkMode = !this.darkMode;
+      localStorage.setItem('darkMode', JSON.stringify(this.darkMode));
+    },
   },
 };
 </script>
 
 <style>
-/* General Styles */
+/* General Styling */
+.page-wrapper {
+  position: relative;
+  text-align: center;
+  padding-top: 60px;
+}
+
 .gold-wrapper {
-  background-color: #fff8e1; /* Light gold background */
+  position: relative;
   padding: 20px;
   border-radius: 12px;
-  box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 8px 18px rgba(0, 0, 0, 0.15);
   max-width: 450px;
   margin: 20px auto;
   text-align: center;
   font-family: 'Arial', sans-serif;
+  transition: background 0.5s ease-in-out, color 0.5s ease-in-out;
 }
 
-h1 {
-  color: #ffd700; /* Gold color */
-  font-size: 26px;
-  margin-bottom: 20px;
-  text-transform: uppercase;
-  text-align: center;
+/* Light & Dark Mode */
+.light-mode {
+  background: linear-gradient(135deg, #ffd700, #ffcc00, #b8860b);
+  color: #111;
 }
 
-h2 {
-  font-size: 22px;
-  color: #ffcc00; /* Bright gold */
-  margin-top: 25px;
-  text-align: center;
+.dark-mode {
+  background: linear-gradient(135deg, #222, #444, #111);
+  color: #fff;
 }
 
-.price {
-  font-size: 18px;
-  margin: 10px 0;
-  color: #ffb300; /* Slight darker gold */
-  text-align: center;
+/* Smooth Theme Change */
+.fade-transition {
+  transition: background 0.5s ease, color 0.5s ease;
 }
 
-input {
+/* Toggle Button */
+.toggle-mode {
+  display: block;
   width: 100%;
-  padding: 20px; /* Increase padding for a larger input field */
-  font-size: 24px; /* Increase font size */
-  border: 2px solid #ffd700; /* Gold border */
+  margin-top: 15px;
+  padding: 10px 15px;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 6px;
+  border: 2px solid #ffd700;
+  background: #222;
+  color: #ffd700;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
+}
+
+.toggle-mode:hover {
+  background: #ffd700;
+  color: #222;
+  box-shadow: 0 0 15px rgba(255, 215, 0, 1);
+}
+
+/* Neon Glow for Input */
+.big-input {
+  width: 100%;
+  padding: 20px;
+  font-size: 22px;
   border-radius: 6px;
   margin: 15px 0;
-  transition: border-color 0.3s;
-  text-align: center; /* Center text in input */
-}
-
-input:focus {
-  border-color: #ffcc00;
-  outline: none;
-}
-
-.timestamp {
-  color: #b58b3b; /* Darker gold shade */
-  margin-top: 15px;
-  font-size: 14px;
   text-align: center;
+  outline: none;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.price span {
-  font-weight: bold;
-  color: #663d00; /* Deep brown-gold for emphasis */
+.light-glow {
+  border: 2px solid #ffd700;
+  background: #fff;
+  color: #111;
+  box-shadow: 0 0 10px #ffd700;
 }
 
-.price,
-.timestamp {
-  font-family: 'Arial', sans-serif;
+.dark-glow {
+  border: 2px solid #ffd700;
+  background: #111;
+  color: #fff;
+  box-shadow: 0 0 15px #ffcc00;
 }
 
-/* Animation Effects */
-.fade-in {
-  animation: fadeIn 1s ease-out forwards;
+/* Smooth Fade Animation */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s ease;
 }
 
-.pulse-animation {
-  animation: pulse 1.5s infinite alternate;
-}
-
-.bounce-animation {
-  animation: bounce 2s infinite;
-}
-
-.slide-up {
-  animation: slideUp 0.8s ease-out forwards;
-}
-
-.glow-animation {
-  animation: glow 1.5s infinite alternate;
-}
-
-.shake-animation {
-  animation: shake 1s infinite;
-}
-
-.hover-animate:hover {
-  transform: scale(1.05);
-  transition: transform 0.3s ease;
-}
-
-/* Animation Keyframes */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes pulse {
-  0% {
-    transform: scale(1);
-    opacity: 1;
-  }
-  100% {
-    transform: scale(1.1);
-    opacity: 0.8;
-  }
-}
-
-@keyframes bounce {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
-}
-
-@keyframes slideUp {
-  from {
-    transform: translateY(20px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-
-@keyframes glow {
-  0% {
-    text-shadow: 0 0 10px #ffd700, 0 0 20px #ffd700, 0 0 30px #ffd700;
-  }
-  100% {
-    text-shadow: 0 0 15px #ffcc00, 0 0 25px #ffcc00, 0 0 35px #ffcc00;
-  }
-}
-
-@keyframes shake {
-  0% {
-    transform: translateX(0);
-  }
-  25% {
-    transform: translateX(-5px);
-  }
-  50% {
-    transform: translateX(5px);
-  }
-  75% {
-    transform: translateX(-5px);
-  }
-  100% {
-    transform: translateX(0);
-  }
-}
-
-/* Responsive Styles for Mobile */
-@media (max-width: 600px) {
-  .gold-wrapper {
-    padding: 20px;
-    max-width: 90%;
-  }
-
-  h1 {
-    font-size: 24px;
-  }
-
-  h2 {
-    font-size: 20px;
-  }
-
-  .price {
-    font-size: 16px;
-  }
-
-  input {
-    font-size: 22px; /* Larger font size */
-    padding: 18px; /* Bigger padding */
-  }
-
-  .timestamp {
-    font-size: 12px;
-  }
-}
-
-@media (max-width: 400px) {
-  .gold-wrapper {
-    padding: 15px;
-  }
-
-  h1 {
-    font-size: 20px;
-  }
-
-  h2 {
-    font-size: 18px;
-  }
-
-  .price {
-    font-size: 14px;
-  }
-
-  input {
-    font-size: 20px; /* Larger font size */
-    padding: 16px; /* Larger padding */
-  }
-
-  .timestamp {
-    font-size: 10px;
-  }
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>
